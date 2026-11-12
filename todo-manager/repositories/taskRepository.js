@@ -1,23 +1,32 @@
 import { Task } from '../models/Task.js';
 
 export const taskRepository = {
-  async findAll() {
-    return await Task.find();
+  // Find all tasks belonging strictly to a specific user
+  async findByUser(userId) {
+    return await Task.find({ userId });
   },
   
-  async findById(id) {
-    return await Task.findById(id);
+  // Find a specific task ensuring it belongs to the user
+  async findByIdAndUser(id, userId) {
+    return await Task.findOne({ _id: id, userId });
   },
   
-  async create(title) {
-    return await Task.create({ title });
+  // Create a new task tied to the user object (title + userId)
+  async create(taskData) {
+    return await Task.create(taskData);
   },
   
-  async update(id, updates) {
-    return await Task.findByIdAndUpdate(id, updates, { new: true });
+  // Update a task ensuring ownership check
+  async updateByUser(id, userId, updates) {
+    return await Task.findOneAndUpdate(
+      { _id: id, userId }, 
+      updates, 
+      { new: true, runValidators: true }
+    );
   },
   
-  async delete(id) {
-    return await Task.findByIdAndDelete(id);
+  // Delete a task ensuring ownership check
+  async deleteByUser(id, userId) {
+    return await Task.findOneAndDelete({ _id: id, userId });
   }
 };
