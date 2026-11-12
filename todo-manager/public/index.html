@@ -2,39 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Task Manager - Secure</title>
+  <title>Task Manager - Multi-User SaaS</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
-    .card { background: #f9f9f9; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    input, button { padding: 10px; margin: 5px 0; font-size: 16px; }
-    button { background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f7f6; }
+    .card { background: #ffffff; padding: 25px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    input, button { width: 100%; padding: 12px; margin: 8px 0; font-size: 16px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+    button { background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
     button:hover { background: #0056b3; }
+    .secondary-btn { background: #6c757d; }
+    .secondary-btn:hover { background: #5a6268; }
     ul { padding-left: 20px; }
+    li { margin: 8px 0; }
+    .toggle-link { color: #007bff; cursor: pointer; text-decoration: underline; background: none; border: none; padding: 0; font-size: 14px; width: auto; display: inline; }
   </style>
 </head>
 <body>
 
-  <h1>Task Manager (Secure Backend Connected)</h1>
+  <h1 style="text-align: center; color: #333;">Task Manager SaaS</h1>
 
-  <!-- LOGIN SECTION (Visible if not logged in) -->
-  <div id="auth-section" class="card">
-    <h3>User Login</h3>
-    <input type="email" id="login-email" placeholder="Enter email..." required /><br>
-    <input type="password" id="login-password" placeholder="Enter password..." required /><br>
+  <!-- LOGIN SECTION -->
+  <div id="login-section" class="card">
+    <h3>Log In to Your Account</h3>
+    <input type="email" id="login-email" placeholder="Enter email..." required />
+    <input type="password" id="login-password" placeholder="Enter password..." required />
     <button onclick="loginUser()">Log In</button>
+    <p style="text-align: center; margin-top: 15px;">
+      Don't have an account? <button class="toggle-link" onclick="showRegisterView()">Sign up here</button>
+    </p>
+  </div>
+
+  <!-- REGISTER SECTION (Hidden by default) -->
+  <div id="register-section" class="card" style="display: none;">
+    <h3>Create New Account</h3>
+    <input type="text" id="reg-username" placeholder="Enter username..." required />
+    <input type="email" id="reg-email" placeholder="Enter email..." required />
+    <input type="password" id="reg-password" placeholder="Enter password..." required />
+    <button onclick="registerUser()">Sign Up</button>
+    <p style="text-align: center; margin-top: 15px;">
+      Already have an account? <button class="toggle-link" onclick="showLoginView()">Log in here</button>
+    </p>
   </div>
 
   <!-- DASHBOARD SECTION (Hidden until logged in) -->
   <div id="dashboard-section" class="card" style="display: none;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3>Your Tasks from MongoDB</h3>
-      <button onclick="logoutUser()" style="background: #dc3545; padding: 5px 10px;">Log Out</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <h3 style="margin: 0;">Your Isolated Tasks</h3>
+      <button onclick="logoutUser()" class="secondary-btn" style="width: auto; padding: 8px 15px;">Log Out</button>
     </div>
 
     <!-- Add New Task Form -->
-    <div style="margin-bottom: 20px;">
-      <input type="text" id="task-title" placeholder="Enter task description..." style="width: 70%;" />
-      <button onclick="createTask()">Add Task</button>
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+      <input type="text" id="task-title" placeholder="Enter new task..." style="margin: 0;" />
+      <button onclick="createTask()" style="width: 130px; margin: 0;">Add Task</button>
     </div>
 
     <!-- Task List -->
@@ -42,16 +61,47 @@
   </div>
 
   <script>
-    // Check login state on page load
+    // 1. Check token on initial page load
     const token = localStorage.getItem('authToken');
     if (token) {
       showDashboard();
       fetchTasks();
     }
 
-    // 1. Login User Function
+    // 2. Register User Function
+    async function registerUser() {
+      const username = document.getElementById('reg-username').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+
+      if (!username || !email || !password) {
+        return alert('Please fill in all registration fields.');
+      }
+
+      try {
+        const response = await fetch('http://localhost:4000/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert('Registration successful! Please log in with your new account.');
+          showLoginView(); // Switch back to login view
+        } else {
+          alert('Registration failed: ' + (result.error || 'Unknown error'));
+        }
+      } catch (err) {
+        console.error('Network error during registration:', err);
+        alert('Network error connecting to server.');
+      }
+    }
+
+    // 3. Log In User Function
     async function loginUser() {
-      const email = document.getElementById('login-email').value;
+      const email = document.getElementById('login-email').value.trim();
       const password = document.getElementById('login-password').value;
 
       try {
@@ -64,19 +114,19 @@
         const result = await response.json();
 
         if (result.success) {
-          localStorage.setItem('authToken', result.token); // Save digital passport
+          localStorage.setItem('authToken', result.token);
           alert('Logged in successfully!');
           showDashboard();
           fetchTasks();
         } else {
-          alert('Login failed: ' + result.error);
+          alert('Login failed: ' + (result.error || 'Invalid credentials'));
         }
       } catch (err) {
         console.error('Network error during login:', err);
       }
     }
 
-    // 2. Fetch Tasks with Bearer Token Header
+    // 4. Fetch User-Specific Tasks
     async function fetchTasks() {
       try {
         const currentToken = localStorage.getItem('authToken');
@@ -84,7 +134,7 @@
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${currentToken}` // 🔑 Passing the secure token
+            'Authorization': `Bearer ${currentToken}`
           }
         });
 
@@ -94,7 +144,7 @@
 
         if (result.success && Array.isArray(result.data)) {
           if (result.data.length === 0) {
-            taskListEl.innerHTML = '<li>No tasks found. Create your first one above!</li>';
+            taskListEl.innerHTML = '<li>No tasks found. Create your first task above!</li>';
             return;
           }
 
@@ -111,7 +161,7 @@
       }
     }
 
-    // 3. Create Task with Bearer Token Header
+    // 5. Create Task Tied to User ID
     async function createTask() {
       const titleInput = document.getElementById('task-title');
       const title = titleInput.value.trim();
@@ -123,7 +173,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${currentToken}` // 🔑 Required for protected POST route
+            'Authorization': `Bearer ${currentToken}`
           },
           body: JSON.stringify({ title })
         });
@@ -131,8 +181,8 @@
         const result = await response.json();
 
         if (result.success) {
-          titleInput.value = ''; // Clear input box
-          fetchTasks(); // Refresh list immediately
+          titleInput.value = '';
+          fetchTasks();
         } else {
           alert('Failed to create task: ' + result.error);
         }
@@ -141,16 +191,27 @@
       }
     }
 
-    // UI Toggle Helpers
+    // --- UI View Switching Helpers ---
+    function showRegisterView() {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('register-section').style.display = 'block';
+    }
+
+    function showLoginView() {
+      document.getElementById('register-section').style.display = 'none';
+      document.getElementById('login-section').style.display = 'block';
+    }
+
     function showDashboard() {
-      document.getElementById('auth-section').style.display = 'none';
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('register-section').style.display = 'none';
       document.getElementById('dashboard-section').style.display = 'block';
     }
 
     function logoutUser() {
       localStorage.removeItem('authToken');
       document.getElementById('dashboard-section').style.display = 'none';
-      document.getElementById('auth-section').style.display = 'block';
+      showLoginView();
     }
   </script>
 
