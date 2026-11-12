@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task Manager - Secure</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+    .card { background: #f9f9f9; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    input, button { padding: 10px; margin: 5px 0; font-size: 16px; }
+    button { background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    ul { padding-left: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>Task Manager (Secure Backend Connected)</h1>
+
+  <!-- LOGIN SECTION (Visible if not logged in) -->
+  <div id="auth-section" class="card">
+    <h3>User Login</h3>
+    <input type="email" id="login-email" placeholder="Enter email..." required /><br>
+    <input type="password" id="login-password" placeholder="Enter password..." required /><br>
+    <button onclick="loginUser()">Log In</button>
+  </div>
+
+  <!-- DASHBOARD SECTION (Hidden until logged in) -->
+  <div id="dashboard-section" class="card" style="display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3>Your Tasks from MongoDB</h3>
+      <button onclick="logoutUser()" style="background: #dc3545; padding: 5px 10px;">Log Out</button>
+    </div>
+
+    <!-- Add New Task Form -->
+    <div style="margin-bottom: 20px;">
+      <input type="text" id="task-title" placeholder="Enter task description..." style="width: 70%;" />
+      <button onclick="createTask()">Add Task</button>
+    </div>
+
+    <!-- Task List -->
+    <ul id="task-list">Loading tasks...</ul>
+  </div>
+
+  <script>
+    // Check login state on page load
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      showDashboard();
+      fetchTasks();
+    }
+
+    // 1. Login User Function
+    async function loginUser() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      try {
+        const response = await fetch('http://localhost:4000/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          localStorage.setItem('authToken', result.token); // Save digital passport
+          alert('Logged in successfully!');
+          showDashboard();
+          fetchTasks();
+        } else {
+          alert('Login failed: ' + result.error);
+        }
+      } catch (err) {
+        console.error('Network error during login:', err);
+      }
+    }
+
+    // 2. Fetch Tasks with Bearer Token Header
+    async function fetchTasks() {
+      try {
+        const currentToken = localStorage.getItem('authToken');
+        const response = await fetch('http://localhost:4000/api/tasks', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}` // 🔑 Passing the secure token
+          }
+        });
+
+        const result = await response.json();
+        const taskListEl = document.getElementById('task-list');
+        taskListEl.innerHTML = '';
+
+        if (result.success && Array.isArray(result.data)) {
+          if (result.data.length === 0) {
+            taskListEl.innerHTML = '<li>No tasks found. Create your first one above!</li>';
+            return;
+          }
+
+          result.data.forEach(task => {
+            const li = document.createElement('li');
+            li.textContent = task.title;
+            taskListEl.appendChild(li);
+          });
+        } else {
+          console.error('Failed to load tasks:', result.error);
+        }
+      } catch (err) {
+        console.error('Error fetching tasks:', err);
+      }
+    }
+
+    // 3. Create Task with Bearer Token Header
+    async function createTask() {
+      const titleInput = document.getElementById('task-title');
+      const title = titleInput.value.trim();
+      if (!title) return alert('Task title cannot be empty');
+
+      try {
+        const currentToken = localStorage.getItem('authToken');
+        const response = await fetch('http://localhost:4000/api/tasks', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}` // 🔑 Required for protected POST route
+          },
+          body: JSON.stringify({ title })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          titleInput.value = ''; // Clear input box
+          fetchTasks(); // Refresh list immediately
+        } else {
+          alert('Failed to create task: ' + result.error);
+        }
+      } catch (err) {
+        console.error('Error creating task:', err);
+      }
+    }
+
+    // UI Toggle Helpers
+    function showDashboard() {
+      document.getElementById('auth-section').style.display = 'none';
+      document.getElementById('dashboard-section').style.display = 'block';
+    }
+
+    function logoutUser() {
+      localStorage.removeItem('authToken');
+      document.getElementById('dashboard-section').style.display = 'none';
+      document.getElementById('auth-section').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
