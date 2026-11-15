@@ -139,7 +139,7 @@ const getExpenses=async (req,res)=>{
 }
 const getExpenseSummary=async (req,res)=>{
     try {
-        const userId=req.user
+        const {userId}=req.user
         const categorySummary=await prisma.expense.groupBy({
             by:['category'],
             where:{userId},
