@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
+const expenseRoutes=require('./routes/expenseRoutes.js')
 
 const app = express();
 
@@ -12,6 +13,8 @@ app.use(cors());
 
 // Mount Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/expenses',expenseRoutes)
+
 
 // Basic Test Route
 app.get('/', (req, res) => {
