@@ -71,3 +71,8 @@ const deleteExpense=async (req,res)=>{
         res.status(500).json({success:false,message:'cannot detete the expense error or unauthorized!!'})
     }
 }
+module.exports = {
+  createExpense,
+  getExpense,
+  deleteExpense,
+};
