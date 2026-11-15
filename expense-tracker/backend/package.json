@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev":"nodemon server.js"
+    "dev": "nodemon server.js",
+    "db:generate:mongo": "npx prisma generate --schema=prisma/schema.mongo.prisma",
+    "db:generate:postgres": "npx prisma generate --schema=prisma/schema.postgres.prisma"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^6.19.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^18.0.10",
@@ -18,6 +21,7 @@
     "mongoose": "^9.12.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "prisma": "^6.19.0"
   }
 }
