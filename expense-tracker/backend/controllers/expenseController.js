@@ -71,8 +71,43 @@ const deleteExpense=async (req,res)=>{
         res.status(500).json({success:false,message:'cannot detete the expense error or unauthorized!!'})
     }
 }
+const updateExpense=async (req,res)=>{
+    try {
+        const {id:expenseId}=req.params
+        const {userId}=req.user
+        const {title,amount,category,date}=req.body
+        const expense=await prisma.expense.findFirst({
+            where:{id:expenseId,userId}
+        })
+        if(!expense){
+            return res.status(404).json({
+                success:false,
+                message:'Expense not found or unauthorized'
+            })
+        }
+        const update=await prisma.expense.update({
+            where:{id:expenseId},
+            data:{
+                title:title !== undefined ? title:expense.title,
+                amount:amount !==undefined ? parseFloat(amount): expense.amount,
+                category: category !== undefined ? category : expense.category,
+                date: date !== undefined ? new Date(date) : expense.date,
+            }
+        })
+        res.status(200).json({
+            success:true,
+            message:'Expense updated successFully',
+            expense:update
+        })
+
+    } catch (error) {
+        console.error('updateExpense error:',error)
+        res.status(500).json({success:false,message:'cannot update the expense error or unauthorized!!'})
+    }
+}
 module.exports = {
   createExpense,
   getExpense,
   deleteExpense,
+  updateExpense
 };

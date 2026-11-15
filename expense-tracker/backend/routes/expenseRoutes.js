@@ -3,6 +3,7 @@ const {
   createExpense,
   getExpense,
   deleteExpense,
+  updateExpense
 } = require('../controllers/expenseController.js');
 const { protect } = require('../middleware/authMiddleware.js');
 
@@ -13,5 +14,7 @@ router.use(protect);
 
 router.route('/').post(createExpense).get(getExpense);
 router.route('/:id').delete(deleteExpense);
+router.route('/:id').delete(deleteExpense).put(updateExpense);
+
 
 module.exports = router;
