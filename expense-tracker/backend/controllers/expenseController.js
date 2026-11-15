@@ -105,9 +105,76 @@ const updateExpense=async (req,res)=>{
         res.status(500).json({success:false,message:'cannot update the expense error or unauthorized!!'})
     }
 }
+const getExpenses=async (req,res)=>{
+    try {
+        const {userId}=req.user;
+        const {startDate,endDate,category}=req.query
+        const whereClause={userId}
+        if(category){
+            whereClause.category=category
+        }
+        if(startDate || endDate){
+            whereClause.data={}
+            if(startDate){
+                whereClause.date.gte=new Date(startDate)
+            }
+            if(endDate){
+                whereClause.date.lte=new Date(endDate)
+            }
+        }
+        const find=await prisma.expense.findMany({
+            where:whereClause,
+            orderBy:{date:'desc'}
+        })
+        res.status(200).json({
+            success:true,
+            count:find.length,
+            data:find
+        })
+
+    } catch (error) {
+        console.error('getExponse error:',error)
+        res.status(500).json({success:false,message:'Canonot get expenses, an error occured'})
+    }
+}
+const getExpenseSummary=async (req,res)=>{
+    try {
+        const userId=req.user
+        const categorySummary=await prisma.expense.groupBy({
+            by:['category'],
+            where:{userId},
+            _sum:{
+                amount:true
+            },
+            _count:{
+                id:true
+            }
+        })
+        const totalSpending=await prisma.expense.aggregate({
+            where:{userId},
+            _sum:{amount:true}
+        })
+        res.status(200).json({
+            success: true,
+            data: {
+                totalSpent: totalSpending._sum.amount || 0,
+                breakdown: categorySummary
+            }
+        });
+    } catch (error) {
+        console.error('getExpenseSummary error:', error);
+        res.status(500).json({ 
+        success: false, 
+        message: 'Cannot calculate expense summary, an error occurred!' 
+        });
+        
+    }
+}
 module.exports = {
   createExpense,
   getExpense,
   deleteExpense,
-  updateExpense
+  updateExpense,
+  getExpenses,
+  getExpenseSummary
 };
