@@ -28,23 +28,56 @@ export default function Register({ onSwitchToLogin }) {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '80px auto', padding: '30px', background: '#1e1e1e', color: '#fff', border: '1px solid #333', borderRadius: '8px', fontFamily: 'sans-serif' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Create Account</h2>
-      {error && <p style={{ color: '#ff4d4d', textAlign: 'center' }}>{error}</p>}
-      {successMsg && <p style={{ color: '#28a745', textAlign: 'center' }}>{successMsg}</p>}
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ padding: '10px', fontSize: '16px', background: '#2a2a2a', border: '1px solid #444', color: '#fff', borderRadius: '4px' }} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required style={{ padding: '10px', fontSize: '16px', background: '#2a2a2a', border: '1px solid #444', color: '#fff', borderRadius: '4px' }} />
-        <button type="submit" disabled={loading} style={{ padding: '10px', fontSize: '16px', background: loading ? '#555' : '#28a745', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
-          {loading ? 'Registering...' : 'Register'}
-        </button>
-      </form>
-      <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '14px' }}>
-        Already have an account?{' '}
-        <span onClick={onSwitchToLogin} style={{ color: '#3b82f6', cursor: 'pointer', textDecoration: 'underline' }}>
-          Login here
-        </span>
-      </p>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', background: '#0a0a0a', fontFamily: "'Inter', sans-serif" }}>
+      <div style={{ width: '100%', maxWidth: '400px', padding: '40px', background: '#171717', color: '#fff', border: '1px solid #262626', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
+        
+        <h2 style={{ textAlign: 'center', marginBottom: '8px', fontSize: '24px', fontWeight: 600 }}>Create Account</h2>
+        <p style={{ textAlign: 'center', color: '#a3a3a3', fontSize: '14px', marginBottom: '24px' }}>Get started with your expense tracking journey</p>
+        
+        {error && <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', color: '#ef4444', padding: '10px', borderRadius: '6px', fontSize: '14px', marginBottom: '20px', textAlign: 'center' }}>{error}</div>}
+        {successMsg && <div style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid #22c55e', color: '#22c55e', padding: '10px', borderRadius: '6px', fontSize: '14px', marginBottom: '20px', textAlign: 'center' }}>{successMsg}</div>}
+        
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#a3a3a3', fontWeight: 500 }}>Email Address</label>
+            <input 
+              type="email" 
+              placeholder="name@example.com" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              required 
+              style={{ width: '100%', padding: '12px', fontSize: '14px', background: '#262626', border: '1px solid #404040', color: '#fff', borderRadius: '8px', outline: 'none' }} 
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', color: '#a3a3a3', fontWeight: 500 }}>Password</label>
+            <input 
+              type="password" 
+              placeholder="••••••••" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              required 
+              style={{ width: '100%', padding: '12px', fontSize: '14px', background: '#262626', border: '1px solid #404040', color: '#fff', borderRadius: '8px', outline: 'none' }} 
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={loading} 
+            style={{ marginTop: '8px', padding: '12px', fontSize: '15px', background: loading ? '#374151' : '#2563eb', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, transition: 'background 0.2s' }}
+          >
+            {loading ? 'Registering...' : 'Sign Up'}
+          </button>
+        </form>
+
+        <p style={{ textAlign: 'center', marginTop: '24px', fontSize: '14px', color: '#a3a3a3' }}>
+          Already have an account?{' '}
+          <span onClick={onSwitchToLogin} style={{ color: '#60a5fa', cursor: 'pointer', fontWeight: 500 }}>
+            Sign in
+          </span>
+        </p>
+      </div>
     </div>
   );
 }

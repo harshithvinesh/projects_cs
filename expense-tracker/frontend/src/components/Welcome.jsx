@@ -1,11 +1,10 @@
 import React from 'react';
 import LightTunnel from './LightTunnel';
-
 export default function Welcome({ onGetStarted }) {
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#000', overflow: 'hidden', fontFamily: 'sans-serif' }}>
+    <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#000', overflow: 'hidden', fontFamily: "'Inter', sans-serif" }}>
       
-      {/* 1. The Animation Background */}
+      {/* Animation Background */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
         <LightTunnel
           cableColor="#3b82f6"
@@ -18,7 +17,7 @@ export default function Welcome({ onGetStarted }) {
         />
       </div>
 
-      {/* 2. Foreground Overlay Content ("Know Your Money") */}
+      {/* Foreground Overlay Content */}
       <div style={{ 
         position: 'absolute', 
         inset: 0, 
@@ -28,42 +27,48 @@ export default function Welcome({ onGetStarted }) {
         justifyContent: 'center', 
         alignItems: 'center', 
         textAlign: 'center',
-        pointerEvents: 'none', // Allows clicks to pass through to the tunnel background
+        pointerEvents: 'none',
         padding: '20px'
       }}>
-        <h1 style={{ 
-          fontSize: '3.5rem', 
-          color: '#fff', 
-          margin: '0 0 10px 0', 
-          textShadow: '0 0 20px rgba(59, 130, 246, 0.6)',
-          letterSpacing: '2px'
-        }}>
-          Know Your Money
-        </h1>
+            <h1 style={{ 
+            fontFamily: "'Playfair Display', serif",
+            fontStyle: 'italic',
+            fontSize: '4.2rem', 
+            fontWeight: 600,
+            color: '#fff', 
+            margin: '0 0 12px 0', 
+            letterSpacing: '-0.02em',
+            textShadow: '0 0 35px rgba(59, 130, 246, 0.5)'
+            }}>
+            Know Your Money
+            </h1>
+
         <p style={{ 
-          color: '#aaa', 
-          fontSize: '1.2rem', 
-          marginBottom: '30px', 
-          maxWidth: '500px' 
+          color: '#94a3b8', // Softer slate gray instead of harsh white/gray
+          fontSize: '1.15rem', 
+          fontWeight: 400,
+          marginBottom: '35px', 
+          maxWidth: '460px',
+          lineHeight: '1.6'
         }}>
           Take control of your finances with real-time tracking, insights, and complete clarity.
         </p>
 
-        {/* Re-enable pointer events for the button so it's clickable */}
         <button 
           onClick={onGetStarted}
           style={{ 
             pointerEvents: 'auto',
-            padding: '12px 30px', 
-            fontSize: '16px', 
-            fontWeight: 'bold', 
-            background: '#007bff', 
+            fontFamily: "'Inter', sans-serif",
+            padding: '14px 32px', 
+            fontSize: '15px', 
+            fontWeight: 600, 
+            background: '#2563eb', 
             color: '#fff', 
             border: 'none', 
-            borderRadius: '8px', 
+            borderRadius: '10px', 
             cursor: 'pointer',
-            boxShadow: '0 4px 15px rgba(0, 123, 255, 0.4)',
-            transition: 'transform 0.2s'
+            boxShadow: '0 10px 25px -5px rgba(37, 99, 235, 0.5)',
+            transition: 'all 0.2s ease'
           }}
         >
           Enter Dashboard
