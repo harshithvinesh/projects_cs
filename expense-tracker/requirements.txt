@@ -1,0 +1,19 @@
+# ==========================================
+# EXPENSE TRACKER PROJECT REQUIREMENTS
+# ==========================================
+
+# --- Backend Dependencies (Node.js / Express) ---
+# express: ^4.19.2
+# @prisma/client: ^6.19.0
+# bcryptjs: ^2.4.3
+# jsonwebtoken: ^9.0.2
+# cors: ^2.8.5
+# dotenv: ^16.4.5
+# prisma: ^6.19.0 (devDependencies)
+# nodemon: ^3.1.0 (devDependencies)
+
+# --- Frontend Dependencies (React / Vite) ---
+# react: ^18.3.1
+# react-dom: ^18.3.1
+# lucide-react: ^0.400.0
+# three: ^0.160.0 (for LightTunnel animations)
