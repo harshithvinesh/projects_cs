@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Welcome from "./components/Welcome";
-import Login from './components/Login';
-import DashBoard from './components/Dashboard';
-import Register from "./components/Register";
+import Welcome from "../components/Welcome";
+import Login from '../components/Login';
+import DashBoard from '../components/Dashboard';
+import Register from "../components/Register";
 
 export default function App() {
   const [showWelcome, setShowWelcome] = useState(true);
