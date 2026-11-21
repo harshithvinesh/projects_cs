@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-  "dev": "npm run db:generate:mongo && nodemon server.js",
-  "db:generate:mongo": "npx prisma generate --schema=prisma/schema.mongo.prisma",
-  "db:generate:postgres": "npx prisma generate --schema=prisma/schema.postgres.prisma",
-  "start": "node server.js"
+  "dev": "npx prisma generate && nodemon src/server.js",
+"start": "node src/server.js"
 }
 ,
   "keywords": [],
