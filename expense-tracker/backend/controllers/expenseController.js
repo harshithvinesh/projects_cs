@@ -1,4 +1,4 @@
-const prisma=require('../config/prisma.js')
+const prisma=require('../src/config/prisma.js')
 const createExpense=async (req,res)=>{
     try {
         const {title, amount, category, date}=req.body;

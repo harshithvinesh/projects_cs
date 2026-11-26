@@ -16,6 +16,9 @@ API.interceptors.request.use((config) => {
 // Auth endpoints
 export const loginUser = (credentials) => API.post('/auth/login', credentials);
 export const registerUser = (userData) => API.post('/auth/register', userData);
+export const updateUserProfile = (formData) => API.put('/auth/profile', formData, {
+  headers: { 'Content-Type': 'multipart/form-data' }
+});
 
 // Expense endpoints
 export const getExpenses = (params) => API.get('/expenses', { params });
