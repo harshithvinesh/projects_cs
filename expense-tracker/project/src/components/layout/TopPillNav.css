@@ -1,0 +1,16 @@
+.top-nav { display: flex; align-items: center; gap: 28px; min-height: 72px; margin-bottom: 42px; }
+.brand { display: flex; align-items: center; gap: 9px; color: var(--text); font-size: 17px; font-weight: 600; letter-spacing: -.04em; }
+.brand-mark { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 10px; background: var(--accent); color: #241006; }
+.brand-dot { color: var(--accent); }
+.pill-nav { display: flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.025); }
+.pill-nav a { display: flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; color: var(--muted); font-size: 11px; transition: .2s; }
+.pill-nav a:hover { color: var(--text); }
+.pill-nav a.active { background: var(--accent); color: #231007; box-shadow: 0 5px 16px rgba(255,122,47,.18); }
+.nav-user { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.avatar { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; background: linear-gradient(135deg, #ff9e6d, #9d79db); color: #1d1013; font-size: 10px; font-weight: 700; }
+.user-copy { display: grid; gap: 2px; }
+.user-copy strong { font-size: 11px; font-weight: 600; }
+.user-copy span { color: var(--muted); font-size: 9px; }
+.logout-button { display: grid; place-items: center; width: 31px; height: 31px; margin-left: 6px; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--muted); }
+.logout-button:hover { color: var(--text); border-color: var(--line-strong); }
+@media (max-width: 620px) { .top-nav { gap: 12px; margin-bottom: 28px; } .user-copy, .logout-button { display: none; } .brand { margin-right: auto; } .pill-nav a { padding: 8px 9px; } .pill-nav a svg { display: none; } }

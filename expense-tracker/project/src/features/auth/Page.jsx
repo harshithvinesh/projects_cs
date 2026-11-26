@@ -1,0 +1,17 @@
+import { ArrowRight, CheckCircle2, LockKeyhole, Sparkles } from 'lucide-react'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useAuth } from '../../app/providers.jsx'
+import Button from '../../components/ui/Button.jsx'
+import GlassCard from '../../components/ui/GlassCard.jsx'
+import './auth.css'
+
+export default function AuthPage({ register = false }) {
+  const { user, login, register: registerUser } = useAuth(); const navigate = useNavigate()
+  const [mode, setMode] = useState(register ? 'register' : 'login'); const [form, setForm] = useState({ username: '', email: '', password: '' }); const [error, setError] = useState(''); const [loading, setLoading] = useState(false)
+  if (user) return <Navigate to="/" replace />
+  const isRegister = mode === 'register'
+  const submit = async (event) => { event.preventDefault(); setLoading(true); setError(''); try { if (isRegister) await registerUser(form); else await login(form); navigate('/') } catch (caught) { setError(caught.error?.message || 'Something went wrong. Please try again.') } finally { setLoading(false) } }
+  const update = (key) => (event) => setForm((current) => ({ ...current, [key]: event.target.value }))
+  return <div className="auth-page"><div className="auth-decoration auth-decoration-one" /><div className="auth-decoration auth-decoration-two" /><div className="auth-brand"><span className="brand-mark"><Sparkles size={17} /></span><span>ledger<span className="brand-dot">.</span></span></div><div className="auth-grid"><div className="auth-intro"><span className="eyebrow"><Sparkles size={12} /> Calm money management</span><h1>Make every rupee<br /><em>feel intentional.</em></h1><p>One clear view of your spending, income, and the habits shaping your month.</p><div className="auth-points"><span><CheckCircle2 size={15} /> Stay on top of your everyday spend</span><span><CheckCircle2 size={15} /> See your month at a glance</span><span><CheckCircle2 size={15} /> Build a calmer financial routine</span></div></div><GlassCard className="auth-card"><div className="auth-tabs"><button className={!isRegister ? 'active' : ''} onClick={() => setMode('login')}>Sign in</button><button className={isRegister ? 'active' : ''} onClick={() => setMode('register')}>Create account</button></div><div className="auth-heading"><span className="auth-icon"><LockKeyhole size={16} /></span><div><h2>{isRegister ? 'Start your ledger' : 'Welcome back'}</h2><p>{isRegister ? 'A clearer view starts here.' : 'Pick up where you left off.'}</p></div></div><form onSubmit={submit}>{isRegister && <label>Your name<input value={form.username} onChange={update('username')} placeholder="Aarav Mehta" autoComplete="name" /></label>}<label>Email address<input type="email" value={form.email} onChange={update('email')} placeholder="you@example.com" autoComplete="email" /></label><label>Password<input type="password" value={form.password} onChange={update('password')} placeholder="At least 6 characters" autoComplete={isRegister ? 'new-password' : 'current-password'} /></label>{error && <p className="form-error">{error}</p>}<Button type="submit" loading={loading} icon={!loading && <ArrowRight size={15} />}>{isRegister ? 'Create account' : 'Sign in'}</Button></form><p className="auth-note">By continuing, you agree to keep your financial life private.</p></GlassCard></div><div className="auth-footer">Personal finance, made quieter <span>•</span> Secure by design</div></div>
+}

@@ -1,0 +1,24 @@
+.line-chart-wrap { position: relative; width: 100%; overflow: visible; }
+.line-chart { display: block; width: 100%; height: 230px; overflow: visible; }
+.chart-grid { stroke: rgba(255,255,255,.08); stroke-dasharray: 3 6; }
+.chart-line { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.chart-spent { stroke: var(--expense); }
+.chart-income { stroke: var(--income); }
+.chart-point { stroke-width: 2; }
+.chart-point-spent { fill: var(--expense); stroke: #2a171c; }
+.chart-point-income { fill: var(--income); stroke: #15261e; }
+.chart-label { fill: var(--subtle); font-size: 10px; }
+.chart-tooltip { position: absolute; top: 8px; transform: translateX(-50%); display: grid; gap: 5px; width: 150px; padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 10px; background: rgba(23,23,29,.96); box-shadow: var(--shadow); font-size: 10px; pointer-events: none; }
+.chart-tooltip strong { font-size: 10px; }
+.chart-tooltip span { display: flex; align-items: center; gap: 6px; color: var(--muted); }
+.dot, .legend-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; }
+.dot-expense { background: var(--expense); } .dot-income { background: var(--income); }
+.donut-layout { display: grid; grid-template-columns: 170px 1fr; align-items: center; gap: 24px; }
+.donut { display: grid; place-items: center; width: 170px; height: 170px; border-radius: 50%; transform: rotate(-25deg); }
+.donut-hole { display: grid; place-content: center; width: 112px; height: 112px; border-radius: 50%; background: var(--panel); text-align: center; transform: rotate(25deg); }
+.donut-hole strong { font-size: 26px; letter-spacing: -.06em; } .donut-hole span { color: var(--muted); font-size: 10px; }
+.donut-legend { display: grid; gap: 12px; }
+.legend-row { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 11px; }
+.legend-row span { display: flex; align-items: center; gap: 8px; } .legend-row strong { color: var(--text); font-weight: 500; }
+.sparkline { width: 76px; height: 30px; opacity: .8; }
+@media (max-width: 620px) { .donut-layout { grid-template-columns: 1fr; justify-items: center; } .donut-legend { width: 100%; } }

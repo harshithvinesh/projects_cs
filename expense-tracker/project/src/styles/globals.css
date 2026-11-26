@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
+
+body {
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--page);
+}
+
+.app-background::before,
+.app-background::after {
+  content: '';
+  position: absolute;
+  width: 54vw;
+  height: 54vw;
+  min-width: 420px;
+  min-height: 420px;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.18;
+}
+
+.app-background::before {
+  top: -25vw;
+  left: 20vw;
+  background: radial-gradient(circle, #ff7a2f, transparent 66%);
+}
+
+.app-background::after {
+  right: -24vw;
+  bottom: -30vw;
+  background: radial-gradient(circle, #8b7cf6 0, #e43d77 30%, transparent 68%);
+}
